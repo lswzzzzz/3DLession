@@ -1,0 +1,83 @@
+// A "Material" file can contain one or more materials
+material orcMaterial
+{
+	technique normal
+	{
+
+		pass 0
+		{
+			shader
+			{
+				vertexShader = UVAnimStroke/Shaders3D/3d_position_skin_tex.vert
+				fragmentShader = UVAnimStroke/Shaders3D/3d_color_tex.frag
+				// sampler:
+				//   responsible for setting the texture and its parameters
+				//   the Id of the sampler is the uniform name
+				sampler u_sampler0
+				{
+					path = UVAnimStroke/monguger.tga
+				}
+			}
+		}
+	}
+	// This is another technique. It "outlines" the model
+	// It has 3 passes in order to get the desired effect
+	technique outline
+	{
+		// 1st pass:
+		// creates a yellow outline of only the hull 
+		pass outline
+		{
+			renderState
+			{
+				cullFace = true
+				cullFaceSide = BACK
+				depthTest = false
+			}
+			shader
+			{
+				vertexShader = UVAnimStroke/Shaders3D/SkinnedOutline.vert
+				fragmentShader = UVAnimStroke/Shaders3D/OutLine.frag
+				// Uniforms
+				OutLineColor = 1,1,0
+				OutlineWidth = 0.04
+			}
+		}
+
+		// 2nd pass:
+		// creates a blue outline of the borders
+		pass outline thick
+		{
+			renderState
+			{
+				cullFace = true
+				cullFaceSide = FRONT
+				depthTest = true
+			}
+			shader
+			{
+				vertexShader = UVAnimStroke/Shaders3D/SkinnedOutline.vert
+				fragmentShader = UVAnimStroke/Shaders3D/OutLine.frag
+				// Uniforms
+				OutLineColor = 0,0,1
+				OutlineWidth = 0.02
+			}
+		}
+		// 3rd pass
+		// Renders the model "normally"
+		// When a 'renderState' is not present it will use the default renderState
+		pass normal
+		{
+			shader
+			{
+				vertexShader = UVAnimStroke/Shaders3D/3d_position_skin_tex.vert
+				fragmentShader = UVAnimStroke/Shaders3D/3d_color_tex.frag
+
+				sampler u_sampler0
+				{
+					path = UVAnimStroke/monguger.tga
+				}
+			}
+		}
+	}
+}
